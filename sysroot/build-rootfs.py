@@ -22,6 +22,12 @@ basePackages = [
     'zlib-devel',
 ]
 unifiedPackages = [
+    'capi-appfw-application',
+    'capi-appfw-application-devel',
+    'capi-appfw-app-common',
+    'capi-appfw-app-common-devel',
+    'capi-appfw-app-control',
+    'capi-appfw-app-control-devel',
     'capi-base-common-devel',
     'capi-base-utils',
     'capi-base-utils-devel',
