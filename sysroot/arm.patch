@@ -1,7 +1,7 @@
-diff --git a/sysroot/arm/usr/include/asm-arm/hwcap.h b/sysroot/arm/usr/include/asm-arm/hwcap.h
+diff --git a/usr/include/asm-arm/hwcap.h b/usr/include/asm-arm/hwcap.h
 index da85060..adaf619 100644
---- a/sysroot/arm/usr/include/asm-arm/hwcap.h
-+++ b/sysroot/arm/usr/include/asm-arm/hwcap.h
+--- a/usr/include/asm-arm/hwcap.h
++++ b/usr/include/asm-arm/hwcap.h
 @@ -26,5 +26,10 @@
  #define HWCAP_VFPD32	(1 << 19)	/* set if VFP has 32 regs (not 16) */
  #define HWCAP_IDIV	(HWCAP_IDIVA | HWCAP_IDIVT)

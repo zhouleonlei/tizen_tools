@@ -37,12 +37,19 @@ cp -r $TIZEN_STUDIO/tools/i586-linux-gnueabi-gcc-9.2/lib/gcc/i586-tizen-linux-gn
 Run `build-rootfs.py` to generate sysroots for arm (device) and x86 (emulator).
 
 ```sh
-cd sysroot
+# For Tizen 5.5
+sysroot/build-rootfs.py --arch arm
+sysroot/build-rootfs.py --arch x86
 
-./build-rootfs.py --arch arm
-./build-rootfs.py --arch x86
-
-git apply *.patch
+# For Tizen 4.0 (optional)
+sysroot/build-rootfs.py --arch arm \
+--base-repo http://download.tizen.org/snapshots/tizen/4.0-base/latest/repos/arm/packages \
+--unified-repo http://download.tizen.org/snapshots/tizen/4.0-unified/latest/repos/standard/packages \
+--output arm_40
+sysroot/build-rootfs.py --arch x86 \
+--base-repo http://download.tizen.org/snapshots/tizen/4.0-base/latest/repos/emulator32/packages \
+--unified-repo http://download.tizen.org/snapshots/tizen/4.0-unified/latest/repos/standard/packages
+--output x86_40
 ```
 
 The sysroot should be re-generated if any dependencies are added by future updates (`git pull`).

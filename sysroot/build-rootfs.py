@@ -99,8 +99,8 @@ parser.add_argument(
     help='target architecture (defaults to "arm")',
     default='arm')
 parser.add_argument(
-    '-o', '--output', metavar='PATH', type=str,
-    help='path to the output directory (defaults to arch)')
+    '-o', '--output', metavar='STR', type=str,
+    help='name of the output directory (defaults to arch)')
 parser.add_argument(
     '-c', '--clean', action='store_true',
     help='clean up the output directory before proceeding')
@@ -116,11 +116,12 @@ args = parser.parse_args()
 
 if not args.output:
     args.output = args.arch
+outpath = os.path.abspath(f'{__file__}/../{args.output}')
 
 if args.clean:
-    shutil.rmtree(args.output)
+    shutil.rmtree(outpath)
 
-downloadPath = os.path.join(args.output, '.rpms')
+downloadPath = os.path.join(outpath, '.rpms')
 os.makedirs(downloadPath, exist_ok=True)
 existingRpms = [f for f in os.listdir(downloadPath) if f.endswith('.rpm')]
 
@@ -168,12 +169,18 @@ for package in basePackages + unifiedPackages:
 # Extract files.
 for rpm in [f for f in os.listdir(downloadPath) if f.endswith('.rpm')]:
     abspath = f'{os.path.abspath(downloadPath)}/{rpm}'
-    command = f'cd {args.output} && rpm2cpio {abspath} | cpio -idum --quiet'
+    command = f'cd {outpath} && rpm2cpio {abspath} | cpio -idum --quiet'
     subprocess.run(command, shell=True, check=True)
 
 # Create symbolic links. Any errors are ignored.
-subprocess.run(f'ln -s asm-arm {args.output}/usr/include/asm', shell=True)
-subprocess.run(f'ln -s libecore_input.so.1 {args.output}/usr/lib/libecore_input.so',
+subprocess.run(f'ln -s asm-arm {outpath}/usr/include/asm', shell=True)
+subprocess.run(f'ln -s libecore_input.so.1 {outpath}/usr/lib/libecore_input.so',
                shell=True)
+
+# Apply a patch if applicable.
+patchFile = os.path.abspath(f'{__file__}/../{args.arch}.patch')
+if os.path.exists(patchFile):
+    command = f'git apply --directory sysroot/{args.output} {patchFile}'
+    subprocess.run(command, shell=True, check=True)
 
 print('Complete')

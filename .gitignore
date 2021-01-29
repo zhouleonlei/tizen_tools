@@ -1,5 +1,3 @@
 toolchains/
-sysroot/.rpms/
-sysroot/arm/
-sysroot/arm64/
-sysroot/x86/
+sysroot/arm*/
+sysroot/x86*/
