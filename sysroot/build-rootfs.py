@@ -36,6 +36,8 @@ unifiedPackages = [
     'capi-system-info-devel',
     'capi-system-system-settings',
     'capi-system-system-settings-devel',
+    'cbhm',
+    'cbhm-devel',
     'coregl',
     'coregl-devel',
     'ecore-con-devel',
