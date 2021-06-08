@@ -191,13 +191,13 @@ for rpm in [f for f in os.listdir(downloadPath) if f.endswith('.rpm')]:
     command = f'cd {outpath} && rpm2cpio {abspath} | cpio -idum --quiet'
     subprocess.run(command, shell=True, check=True)
 
-# Create symbolic links. Any errors are ignored.
-subprocess.run(f'ln -s asm-{args.arch} {outpath}/usr/include/asm', shell=True)
-subprocess.run(f'ln -s libecore_input.so.1 {outpath}/usr/lib/libecore_input.so',
-               shell=True)
-if args.arch == 'arm64':
-    subprocess.run(f'ln -s ../lib64/pkgconfig {outpath}/usr/lib/pkgconfig',
-                   shell=True)
+# Create symbolic links.
+if not os.path.exists(f'{outpath}/usr/include/asm'):
+    os.symlink(f'asm-{args.arch}', f'{outpath}/usr/include/asm')
+if not os.path.exists(f'{outpath}/usr/lib/libecore_input.so'):
+    os.symlink(f'libecore_input.so', f'{outpath}/usr/lib/libecore_input.so')
+if args.arch == 'arm64' and not os.path.exists(f'{outpath}/usr/lib/pkgconfig'):
+    os.symlink(f'../lib64/pkgconfig', f'{outpath}/usr/lib/pkgconfig')
 
 # Apply a patch if applicable.
 patchFile = os.path.abspath(f'{__file__}/../{args.arch}.patch')
