@@ -196,8 +196,6 @@ for rpm in [f for f in os.listdir(downloadPath) if f.endswith('.rpm')]:
 # Create symbolic links.
 if not os.path.exists(f'{outpath}/usr/include/asm'):
     os.symlink(f'asm-{args.arch}', f'{outpath}/usr/include/asm')
-if not os.path.exists(f'{outpath}/usr/lib/libecore_input.so'):
-    os.symlink(f'libecore_input.so', f'{outpath}/usr/lib/libecore_input.so')
 if args.arch == 'arm64' and not os.path.exists(f'{outpath}/usr/lib/pkgconfig'):
     os.symlink(f'../lib64/pkgconfig', f'{outpath}/usr/lib/pkgconfig')
 
