@@ -93,6 +93,8 @@ unifiedPackages = [
     'libwayland-extension-client',
     'libxkbcommon',
     'libxkbcommon-devel',
+    'tzsh',
+    'tzsh-devel',
     'xdgmime',
     'xdgmime-devel',
     'wayland-extension-client-devel',
