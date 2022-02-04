@@ -63,6 +63,8 @@ unifiedPackages = [
     'eet',
     'eet-devel',
     'efl-devel',
+    'efl-extension',
+    'efl-extension-devel',
     'efreet-devel',
     'eina',
     'eina-devel',
