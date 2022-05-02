@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import urllib.parse
 import urllib.request
 
@@ -112,16 +113,13 @@ unifiedPackages = [
 
 # Execute only if run as a script.
 if __name__ != "__main__":
-    exit(1)
+    sys.exit()
 
-if not shutil.which('rpm2cpio'):
-    print('rpm2cpio is not installed. To install:\n'
-          '  sudo apt install rpm2cpio')
-    exit(1)
-if not shutil.which('cpio'):
-    print('cpio is not installed. To install:\n'
-          '  sudo apt install cpio')
-    exit(1)
+# Check dependencies.
+for dep in ['rpm2cpio', 'cpio', 'git']:
+    if not shutil.which(dep):
+        sys.exit(f'{dep} is not installed. To install, run:\n'
+                 f'  sudo apt install {dep}')
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
@@ -150,7 +148,7 @@ if not args.output:
     args.output = args.arch
 outpath = os.path.abspath(f'{__file__}/../{args.output}')
 
-if args.clean:
+if args.clean and os.path.exists(outpath):
     shutil.rmtree(outpath)
 
 downloadPath = os.path.join(outpath, '.rpms')
@@ -164,8 +162,7 @@ elif args.arch == 'arm64':
 elif args.arch == 'x86':
     archName = 'i686'
 else:
-    print(f'Undefined arch: {args.arch}')
-    exit(1)
+    sys.exit(f'Undefined arch: {args.arch}')
 
 # Retrieve html documents.
 documents = {}
@@ -193,7 +190,7 @@ for package in basePackages + unifiedPackages:
             break
 
     if len(match) == 0:
-        print(f'Could not find a package {package}')
+        sys.exit(f'Could not find a package {package}')
     else:
         print(f'Downloading {url}...')
         urllib.request.urlretrieve(url, f'{downloadPath}/{match[0]}')
@@ -209,6 +206,14 @@ if not os.path.exists(f'{outpath}/usr/include/asm'):
     os.symlink(f'asm-{args.arch}', f'{outpath}/usr/include/asm')
 if args.arch == 'arm64' and not os.path.exists(f'{outpath}/usr/lib/pkgconfig'):
     os.symlink(f'../lib64/pkgconfig', f'{outpath}/usr/lib/pkgconfig')
+
+# Copy objects required by the linker, such as crtbeginS.o and libgcc.a.
+if args.arch == 'arm64':
+    libpath = f'{outpath}/usr/lib64'
+else:
+    libpath = f'{outpath}/usr/lib'
+subprocess.run(
+    f'cd {libpath} && cp gcc/*/*/*.o gcc/*/*/*.a .', shell=True, check=True)
 
 # Apply a patch if applicable.
 patchFile = os.path.abspath(f'{__file__}/../{args.arch}.patch')
