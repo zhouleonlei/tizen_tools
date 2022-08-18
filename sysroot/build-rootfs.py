@@ -110,6 +110,20 @@ unifiedPackages = [
     'wayland-extension-client-devel',
     'wayland-devel',
 ]
+daliPackages = [
+    'dali2',
+    'dali2-adaptor',
+    'dali2-adaptor-devel',
+    'dali2-devel',
+    'dali2-toolkit',
+    'dali2-toolkit-devel',
+]
+
+# Use the Tizen 5.5 package repository by default for glibc version compatibility.
+# The only exceptions are dali2-related packages which were added in Tizen 6.5.
+base_repo = 'http://download.tizen.org/snapshots/tizen/5.5-base/latest/repos/standard/packages'
+unified_repo = 'http://download.tizen.org/snapshots/tizen/5.5-unified/latest/repos/standard/packages'
+dali_repo = 'http://download.tizen.org/snapshots/tizen/6.5-unified/latest/repos/standard/packages'
 
 # Execute only if run as a script.
 if __name__ != "__main__":
@@ -134,14 +148,6 @@ parser.add_argument(
 parser.add_argument(
     '-c', '--clean', action='store_true',
     help='clean up the output directory before proceeding')
-parser.add_argument(
-    '-b', '--base-repo', metavar='URL', type=str,
-    help='url to the base packages repository',
-    default='http://download.tizen.org/snapshots/tizen/5.5-base/latest/repos/standard/packages')
-parser.add_argument(
-    '-u', '--unified-repo', metavar='URL', type=str,
-    help='url to the unified packages repository',
-    default='http://download.tizen.org/snapshots/tizen/5.5-unified/latest/repos/standard/packages')
 args = parser.parse_args()
 
 if not args.output:
@@ -166,16 +172,17 @@ else:
 
 # Retrieve html documents.
 documents = {}
-for url in [f'{args.base_repo}/{archName}',
-            f'{args.base_repo}/noarch',
-            f'{args.unified_repo}/{archName}',
-            f'{args.unified_repo}/noarch']:
+for url in [f'{base_repo}/{archName}',
+            f'{base_repo}/noarch',
+            f'{unified_repo}/{archName}',
+            f'{unified_repo}/noarch',
+            f'{dali_repo}/{archName}']:
     request = urllib.request.Request(url)
     with urllib.request.urlopen(request) as response:
         documents[url] = response.read().decode('utf-8')
 
 # Download packages.
-for package in basePackages + unifiedPackages:
+for package in basePackages + unifiedPackages + daliPackages:
     quoted = urllib.parse.quote(package)
     pattern = f'{re.escape(quoted)}-\\d+\\.[\\d_\\.]+-[\\d\\.]+\\..+\\.rpm'
 
