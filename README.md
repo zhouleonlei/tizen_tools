@@ -8,7 +8,7 @@ You need a Linux x64 host to build the Flutter engine for Tizen devices.
 
 ### Building the toolchain from source (recommended)
 
-Run the following commands to build LLVM 14 from source.
+Run the following commands to build LLVM 15 from source.
 
 ```sh
 # Install prerequisites for build. We use ninja and clang-11 for the build.
@@ -45,7 +45,7 @@ for f in ~/tizen-studio/tools/i586-linux-gnueabi-gcc-9.2/bin/i586-linux-gnueabi-
 done
 ```
 
-The toolchain shipped with Tizen Studio (LLVM 10) is pretty old. You need to disable the following unsupported compile options before running the engine build.
+The toolchain shipped with Tizen Studio (LLVM 10) is pretty old. You need to disable the following unsupported compile options (or more in the future) before running the engine build.
 
 ```patch
 --- a/build/config/compiler/BUILD.gn

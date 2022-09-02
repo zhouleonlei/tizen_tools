@@ -12,10 +12,15 @@ cd "$SCRIPT_DIR"
 # Check out the LLVM project source code.
 if [ -d llvm-project ]; then
   echo "The directory already exists. Skipping download."
+  cd llvm-project
 else
-  git clone --depth=1 --branch=llvmorg-14.0.1 https://github.com/llvm/llvm-project.git
+  mkdir llvm-project
+  cd llvm-project
+  git init
+  git remote add origin https://github.com/llvm/llvm-project.git
+  git fetch --depth=1 origin aaaf8e4c409f080f35ea227b20dc6ac8a45c2fa4
+  git checkout FETCH_HEAD
 fi
-cd llvm-project
 
 # Run the ninja build.
 mkdir -p build && cd build
