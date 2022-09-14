@@ -105,6 +105,8 @@ unifiedPackages = [
     'libxkbcommon-devel',
     'tzsh',
     'tzsh-devel',
+    'vulkan-headers',
+    'vulkan-loader',
     'xdgmime',
     'xdgmime-devel',
     'wayland-extension-client-devel',
