@@ -107,10 +107,11 @@ unifiedPackages = [
     'tzsh-devel',
     'vulkan-headers',
     'vulkan-loader',
-    'xdgmime',
-    'xdgmime-devel',
+    'vulkan-loader-devel',
     'wayland-extension-client-devel',
     'wayland-devel',
+    'xdgmime',
+    'xdgmime-devel',
 ]
 daliPackages = [
     'dali2',
